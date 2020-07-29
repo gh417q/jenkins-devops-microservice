@@ -52,7 +52,7 @@ pipeline {
 		sh 'mvn failsafe:integration-test failsafe:verify' // configured in pom.xml to run Cucumber Integration Tests
 	  }
     }
-	stage {
+	stage('Package') {
 		steps {
 			echo "Build jar"
 			sh 'mvn package -DskipTests'
