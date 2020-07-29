@@ -13,11 +13,13 @@
 
 // DECLARATIVE
 pipeline {
-  agent any
+  // agent any
+  agent { docker { image 'maven:3.6.3' } }
   stages {
     stage('Build') {
       steps {
         echo "Build"
+		sh 'mvn --version'
 	  }
     }
     stage('Test') {
@@ -40,6 +42,12 @@ pipeline {
 	  }
 	  failure {
 		  echo "running when failed"
+	  }
+	  unstable {
+		  echo "build is unstable"
+	  }
+	  changed {
+		  echo "build status changed"
 	  }
   }
 }
