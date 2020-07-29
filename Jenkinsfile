@@ -30,5 +30,15 @@ pipeline {
         echo "Integration Test"
 	  }
     }
+  } post {
+	  always {
+		  echo "running always"
+	  }
+	  success {
+		  echo "running if success"
+	  }
+	  failure {
+		  echo "running when failed"
+	  }
   }
 }
