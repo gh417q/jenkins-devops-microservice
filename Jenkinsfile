@@ -15,11 +15,17 @@
 pipeline {
   agent any
   // agent { docker { image 'maven:3.6.3' } }
+  environment {
+	  mavenHome = tool "myMaven" // installed in Jenkins by this name
+	  dockerHome = tool "myDocker" // installed in Jenkins by this name
+	  PATH = "$PATH:$mavenHome/bin:$dockerHome/bin"
+  }
   stages {
     stage('Build') {
       steps {
         echo "Build"
-		// sh 'mvn --version'
+		sh 'mvn --version'
+		sh 'docker version'
 		echo "PATH: $PATH"
 		echo "BUILD NUMBER: $env.BUILD_NUMBER"
 		echo "BUILD ID: $env.BUILD_ID"
