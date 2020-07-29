@@ -49,9 +49,34 @@ pipeline {
     stage('Integration Test') {
       steps {
         echo "Integration Test"
-		sh 'mvn failsafe:integration-test failsafe:verify'
+		sh 'mvn failsafe:integration-test failsafe:verify' // configured in pom.xml to run Cucumber Integration Tests
 	  }
     }
+	stage {
+		steps {
+			echo "Build jar"
+			sh 'mvn package -DskipTests'
+		}
+	}
+
+	stage('Build Docker Image') {
+	  steps {
+	    // docker build -t dh417q/currency-exchange-devops:$env.BUILD_TAG - plain call command
+	    script {
+	      dockerImage = docker.build("dh417q/currency-exchange-devops:${env.BUILD_TAG}")
+	    }
+	  }
+	}
+	stage('Push Docker Image') {
+	  steps {
+		script {
+          docker.withRegistry('', 'dockerhub') {
+            dockerImage.push();
+		    dockerImage.push('latest');
+		  }
+		}
+	  }
+	}
   }
   post {
 	  always {
